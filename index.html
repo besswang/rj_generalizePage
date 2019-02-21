@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>推广页</title>
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <div class="form-con">
+    <form action="">
+      <div class="form-ul">
+        <div class="form-li">
+          <input id="tel" class="weui-input" type="tel" placeholder="请输入手机号">
+        </div>
+        <span id="telvis" class="warn" style="visibility:hidden;">请输入有效手机号</span>
+        <div class="form-li flex flex-r just-c" style="margin-top:4px;">
+          <input id="code" class="weui-input" type="number" placeholder="请输入验证码">
+          <button id="getCode" class="weui-vcode-btn">获取验证码</button>
+        </div>
+        <span id="codevis" class="warn" style="visibility:hidden;"></span>
+      </div>
+      <a href="#" class="btn" id="formFn">立即获取额度</a>
+    </form>
+  </div>
+</body>
+</html>
+<script type="text/javascript">
+  var wait = 60;
+  var dataCode = ""
+  var codevis = document.getElementById("codevis");
+  function time(o) {
+    if (wait == 0) {
+      o.removeAttribute("disabled");
+      o.innerHTML ="获取验证码";
+      o.style.color = '#ff702a';
+      wait = 60;
+    } else {
+      o.setAttribute("disabled", true);
+      o.innerHTML ="重新发送(" + wait + ") ";
+      o.style.color = 'rgba(0, 0, 0, 0.3)';
+      wait--;
+      setTimeout(function () {
+        time(o)
+      },
+        1000)
+    }
+  }
+  //获取验证码
+  document.getElementById("getCode").onclick = function () {
+    codevis.style.visibility = "hidden";
+    time(this);
+    //调用验证码接口,存储到dataCode中
+
+  }
+  //手机号校验
+  function telFn() {
+    let tel = document.getElementById("tel").value;
+    let telvis = document.getElementById("telvis");
+    if (!(/^1[34578]\d{9}$/.test(tel))) {
+      telvis.style.visibility = "visible";
+      return false;
+    }else{
+      telvis.style.visibility = "hidden";
+      return true
+    }
+  }
+  //验证码校验
+  function codeFn () {
+    let code = document.getElementById("code").value;
+    if(code==""){
+      codevis.style.visibility = "visible";
+      codevis.innerHTML = "请输入验证码"
+      return false;
+    }else{
+      if(parseInt(code) != parseInt(dataCode)){
+        codevis.style.visibility = "visible";
+        codevis.innerText = "验证码有误"
+        return false
+      }else{
+        codevis.style.visibility = "hidden";
+        return true
+      }
+    }
+  }
+  document.getElementById("formFn").onclick = function () {
+    if(telFn() && codeFn()){
+      //立即获取额度按钮接口
+      window.location.href = "http://www.baidu.com"
+    }
+  }
+</script>
